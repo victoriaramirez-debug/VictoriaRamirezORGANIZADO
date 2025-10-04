@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Onda Sinodial</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("2.jpg");
+        background-size: 900px;
+      }
+      canvas {
+        border: 5px solid white; 
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="700" height="565"></canvas>
+    
+    <script src="utils.js"></script>
+    <script src="./classes/ball.js"></script>
+    <script>
+    window.onload = function () {
+      var canvas = document.getElementById('canvas'),
+          context = canvas.getContext('2d'),
+          ball = new Ball(),
+          angle = 0,
+          centerY = 425,
+          range = 50,
+          xspeed = 2,   
+          yspeed = 0.08;
+
+      
+      var patineta = new Image();
+      patineta.src = "1.png";
+      var patinetaWidth = 100;
+      var patinetaHeight = 100;
+      ball.x = canvas.width / 2;
+      ball.y = 150;
+
+      var fondo = new Image();
+      fondo.src = "3.jpg";
+
+      ball.draw = function(ctx) {
+        ctx.drawImage(patineta, this.x - patinetaWidth / 2, this.y - patinetaHeight / 2, patinetaWidth, patinetaHeight);
+      };
+
+      (function drawFrame () {
+        window.requestAnimationFrame(drawFrame, canvas);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(fondo, 0, 0, canvas.width, canvas.height);
+ 
+       ball.x += xspeed;
+        if (ball.x - patinetaWidth / 2 < 0 || ball.x + patinetaWidth / 2 > canvas.width) {
+          xspeed *= -1;
+        }
+
+        ball.y = centerY + Math.sin(angle) * range;
+        angle += yspeed;
+ 
+        ball.draw(context);
+      }());
+    };
+    </script>
+  </body>
+</html>

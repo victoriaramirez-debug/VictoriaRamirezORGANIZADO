@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body{
+            text-align: left;
+            background-image: url("3.png");
+            background-size: cover;
+            margin-top: -1cm;
+            background-repeat: no-repeat;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 100%;
+        }
+        .canvas-left {
+            text-align: left;
+        }
+        .canvas-right {
+            text-align: right;
+        }
+        aside {
+            display: block;
+            margin-top: 10px;
+            font-family: Impact;
+            font-size: 21px;
+            color: #ffffff;
+            margin-top: -15.5cm;
+            margin-left: 1cm;
+            margin-right: 1cm;
+        }
+    </style>
+    <div class="container">
+        <div class="canvas-left">
+            <canvas id="canvasLeft" width="630" height="630"></canvas>
+            <aside>Move mouse on canvas element (left).</aside>
+        </div>
+        <div class="canvas-right">
+            <canvas id="canvasRight" width="630" height="630"></canvas>
+            <aside>Move mouse on canvas element (right).</aside>
+        </div>
+    </div>
+    <script>
+        function setupCanvas(canvasId, imageSrc) {
+            var canvas = document.getElementById(canvasId);
+            var context = canvas.getContext('2d');
+            var image = new Image();
+
+            var mouse = { x: canvas.width / 2, y: canvas.height / 2 };
+            canvas.addEventListener('mousemove', function(e) {
+                var rect = canvas.getBoundingClientRect();
+                mouse.x = e.clientX - rect.left;
+                mouse.y = e.clientY - rect.top;
+            });
+
+            image.onload = function() {
+                drawFrame();
+            };
+            image.onerror = function() { alert("No se pudo cargar la imagen " + imageSrc); };
+
+            function drawFrame () {
+                window.requestAnimationFrame(drawFrame);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Tamaño deseado para mostrar la imagen (más pequeño)
+                var drawWidth = 400;
+                var drawHeight = 225; // Mantiene la proporción 1920x1080
+
+                // Rotación opcional hacia el mouse
+                var centerX = canvas.width / 2;
+                var centerY = canvas.height / 2;
+                var dx = mouse.x - centerX;
+                var dy = mouse.y - centerY;
+                var radianes = Math.atan2(dy, dx);
+
+                context.save();
+                context.translate(centerX, centerY);
+                context.rotate(radianes);
+                context.drawImage(image, -drawWidth/2, -drawHeight/2 - 40, drawWidth, drawHeight);
+                context.restore();
+            }
+
+            image.src = imageSrc;
+        }
+
+        // Canvas izquierdo con 1.png
+        setupCanvas('canvasLeft', '1.png');
+        // Canvas derecho con 2.png (puedes cambiar el nombre de la imagen)
+        setupCanvas('canvasRight', '2.png');
+    </script>
+</body>
+</html>
