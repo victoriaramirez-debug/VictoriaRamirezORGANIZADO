@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Drawing App</title>
+<style>
+body {
+  text-align: center;
+  width: 100%;
+  background: url('1.gif');
+  background-size: cover;
+}
+
+canvas {
+  background-color: white;
+  border-radius: 15px;      
+  box-shadow: 0 0 15px rgba(0,0,0,0.2); 
+}
+
+.container{
+  margin: 0 auto;
+  width: 1000px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+button{
+  width: 50px;
+  height: 30px;
+  margin: 3px;
+  border-radius: 8px; 
+  border: none;
+}
+
+button:hover{
+  opacity: 0.7;
+}
+
+#black { 
+    background-color:#000000;
+    font: 16px impact; 
+    color: white; 
+}
+#withe { 
+    background-color:#ffffff; 
+    font: 16px impact; 
+    color: white; 
+}
+#red { 
+    background-color:#b11212; 
+    font: 16px impact; 
+    color: white; 
+}
+#orange { 
+    background-color:#d87110; 
+    font: 16px impact; 
+    color: white; 
+}
+#yellow { 
+    background-color:#F3E600; 
+    font: 16px impact; 
+    color: white; 
+}
+#green { 
+    background-color:#74da1b; 
+    font: 16px impact; 
+    color: white; 
+}
+#blue { 
+    background-color:#1b91da; 
+    font: 16px impact; 
+    color: white; 
+}
+#purple { 
+    background-color:#9d1e99; 
+    font: 16px impact; 
+    color: white; 
+}#pink { 
+    background-color:#ea678a; 
+    font: 16px impact; 
+    color: white; 
+}
+#grey { 
+    background-color:#7e7e7e; 
+    font: 16px impact; 
+    color: white; 
+}
+
+
+#borrar{
+  width: 150px;
+  background-color:rgb(55, 255, 0);
+  font: 16px impact;
+  color: rgb(0, 0, 0);
+}
+
+.grosor button {
+  background-color: white;
+  font: 16px impact;
+  color: black;
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.grosor{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px
+}
+
+.punto {
+  display: inline-block;
+  background-color: black;
+  border-radius: 50%;
+}
+
+.punto.delgado {
+  width: 6px;
+  height: 6px;
+}
+.punto.medio {
+  width: 12px;
+  height: 12px;
+}
+
+.punto.grueso {
+  width: 18px;
+  height: 18px;
+}
+.grosor button.activo {
+  background-color: black;
+  color: white;
+}
+
+.colores {
+  display: flex;
+  flex-direction: row;
+  gap: 10px; 
+  margin: 10px;
+}
+
+.colores .columna {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+aside {
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+<div class="container" id="container">
+
+  <div class="colores">
+      <button id="black" type="button" value="#000000"></button>
+      <button id="white" type="button" value="#ffffff"></button>
+      <button id="red" type="button" value="#b11212"></button>
+      <button id="orange" type="button" value="#d87110"></button>
+      <button id="yellow" type="button" value="#F3E600"></button>
+      <button id="green" type="button" value="#74da1b"></button>
+      <button id="blue" type="button" value="#1b91da"></button>
+      <button id="purple" type="button" value="#9d1e99"></button>     
+      <button id="pink" type="button" value="#ea678a"></button>
+      <button id="gray" type="button" value="#7e7e7e"></button>
+
+    </div>
+  </div>
+  <div class="grosor">
+    <button id="delgado"><span class="punto delgado"></span></button>
+    <button id="medio"><span class="punto medio"></span></button>
+    <button id="grueso"><span class="punto grueso"></span></button>
+    <button id="borrar" type="button">Borrar dibujo</button>
+  </div>
+
+  <canvas id="canvas" width="1000px" height="500px"></canvas>
+
+ 
+
+
+</div>
+
+<aside></aside>
+
+<script src="utils.js"></script>
+<script>
+window.onload = function () {
+  var canvas = document.getElementById('canvas'),
+      context = canvas.getContext('2d'),
+      mouse = utils.captureMouse(canvas);
+
+  var grosor = 3;
+
+  canvas.addEventListener('mousedown', function () {
+    context.beginPath();
+    context.moveTo(mouse.x, mouse.y);
+    canvas.addEventListener('mousemove', onMouseMove, false);
+  }, false);
+
+  canvas.addEventListener('mouseup', function () {
+    canvas.removeEventListener('mousemove', onMouseMove, false);
+  }, false);
+
+  function onMouseMove () {
+    context.lineTo(mouse.x, mouse.y);
+    context.lineWidth = grosor;
+    context.stroke();
+  }
+
+  var colores = document.getElementsByClassName('colores')[0];
+  colores.addEventListener('click', function(event) {
+    if(event.target.tagName === "BUTTON"){
+      context.strokeStyle = event.target.value;
+    }
+  });
+
+  document.getElementById('borrar').addEventListener('click', function() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  });
+
+  var botonesGrosor = {
+    delgado: 2,
+    medio: 5,
+    grueso: 10
+  };
+
+  for (let id in botonesGrosor) {
+    let btn = document.getElementById(id);
+    btn.addEventListener('click', function() {
+      grosor = botonesGrosor[id];
+    });
+  }
+
+
+};
+</script>
+</body>
+</html>
