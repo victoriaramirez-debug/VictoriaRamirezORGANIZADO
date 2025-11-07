@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reloj</title>
+<style>
+  body {
+      margin: 0;
+      background: url('4.jpg') center center / cover no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300vh;
+    }
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<canvas id="fondo"></canvas>
+<canvas id="reloj" width="400" height="400" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%);"></canvas>
+
+<script>
+const fondo = document.getElementById("fondo");
+const ctxFondo = fondo.getContext("2d");
+const reloj = document.getElementById("reloj");
+const ctx = reloj.getContext("2d");
+const cx = reloj.width / 2;
+const cy = reloj.height / 2;
+
+fondo.width = window.innerWidth;
+fondo.height = window.innerHeight;
+
+
+function dibujarFondo() {
+  ctxFondo.fillStyle = "rgba(255,255,255,0.6)";
+  ctxFondo.fillRect(0, 0, fondo.width, fondo.height);
+}
+
+const imagen = new Image();
+imagen.src = "12.png";
+
+let vrSeg = 0.1;
+let vrMin = vrSeg / 60;
+let vrHor = vrMin / 12;
+
+let angSeg = 0;
+let angMin = 0;
+let angHor = 0;
+
+function dibujarReloj() {
+  ctx.clearRect(0, 0, reloj.width, reloj.height);
+
+  if (imagen.complete) {
+    ctx.drawImage(imagen, 0, 0, reloj.width, reloj.height);
+  }
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angHor);
+  ctx.fillStyle = "#db8c23";
+  ctx.fillRect(-4, -10, 6, 80);
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angMin);
+  ctx.fillStyle = "#ffd710";
+  ctx.fillRect(-2, -5, 6, 110);
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angSeg);
+  ctx.fillStyle = "#a43faf";
+  ctx.fillRect(-1, -50, 10, 130);
+  ctx.restore();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, 10, 0, Math.PI * 2);
+  ctx.fillStyle = "#d11111";
+  ctx.fill();
+}
+
+function animar() {
+  dibujarFondo();
+  angSeg += vrSeg;
+  angMin += vrMin;
+  angHor += vrHor;
+  dibujarReloj();
+  requestAnimationFrame(animar);
+}
+
+animar();
+</script>
+</body>
+</html>
